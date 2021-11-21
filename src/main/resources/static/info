@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Описание:</h1>
+    <p><a href="http://127.0.0.1:3466/">http://127.0.0.1:3466/</a> - директория статических файлов<br>
+    <p><a href="http://127.0.0.1:3466/example">http://127.0.0.1:3466/example</a> - статический файл с лекции<br>
+    <p><a href="http://127.0.0.1:3466/info">http://127.0.0.1:3466/info</a> - статический файл в котором написан этот текст<br>
+    <p><a href="http://127.0.0.1:3466/getProducts">http://127.0.0.1:3466/getProducts</a> - GET запрос, чтобы смотреть все добавленные товары<br>
+    <p><a href="http://127.0.0.1:3466/postProduct">http://127.0.0.1:3466/postProduct</a> - POST запрос, чтобы добавить в хранилище запись с именем товара и его количеством<br>
+    <p>Пользователи:<br>
+    <p>guest: guest, guest<br>
+    <p>manager: manager, manager<br>
+</body>
+</html>

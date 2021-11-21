@@ -1,0 +1,25 @@
+version '1.0-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    dependencies {
+        implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.0.4'
+
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.6'
+
+        implementation "org.eclipse.jetty:jetty-server:9.4.33.v20201020"
+        implementation "org.eclipse.jetty:jetty-servlet:9.4.33.v20201020"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.8.1"
+    }
+}
