@@ -1,5 +1,6 @@
 package servlet;
 
+import DAO.ProductDAO;
 import entity.Product;
 
 import javax.servlet.ServletException;
@@ -7,32 +8,39 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class PostServlet extends HttpServlet {
+public final class PostServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-
-        Product product = new Product();
-        product.setName(req.getParameter("name"));
-        product.setCompany("defaultCompany");
-        product.setQuantity(Integer.parseInt(req.getParameter("quantity")));
-
+        resp.setCharacterEncoding("cp1251");
+        resp.setContentType("text/html;charset=cp1251");
         try{
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/db", "postgres", "123567");
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO \"product\"(name,company,quantity) values (?,?,?)");
-            statement.setString(1,product.getName());
-            statement.setString(2, product.getCompany());
-            statement.setInt(3, product.getQuantity());
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            PagePost(req, resp);
+            resp.setStatus(HttpServletResponse.SC_OK);
+        }catch (NullPointerException nullException) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Not enough parameters");
+        } catch (SQLException throwables) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQLException");
         }
-        getServletContext().getRequestDispatcher("/").forward(req,resp);
+    }
+    public void PagePost(HttpServletRequest req, HttpServletResponse resp) throws SQLException {
+        String name = req.getParameter("name");
+        String company = req.getParameter("company");
+        String quantityString = req.getParameter("quantity");
+
+        if ((name == null)|(company == null)|(quantityString == null)){
+            throw new NullPointerException();
+        }
+        int quantity = Integer.parseInt(quantityString);
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/db",
+                "postgres", "123567");
+        ProductDAO productDAO = new ProductDAO(connection);
+        productDAO.save(new Product(name,
+                company,
+                quantity));
     }
 }

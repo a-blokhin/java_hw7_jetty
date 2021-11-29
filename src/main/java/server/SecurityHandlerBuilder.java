@@ -6,10 +6,7 @@ import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.util.security.Constraint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("NotNullNullableValidation")
@@ -23,12 +20,22 @@ public final class SecurityHandlerBuilder {
         security.setLoginService(loginService);
 
         final List<ConstraintMapping> constraintMappings = new ArrayList<>();
-        constraintMappings.addAll(constraintFullMapping(
+        constraintMappings.addAll(constraintPostMapping(
                 buildConstraint(ROLE_MANAGER),
                 Collections.singletonList("/postProduct")
         ));
 
         constraintMappings.addAll(constraintGetMapping(
+                buildConstraint(ROLE_GUEST, ROLE_MANAGER),
+                Collections.singletonList("/getProducts")
+        ));
+
+        constraintMappings.addAll(constraintHeadMapping(
+                buildConstraint(ROLE_GUEST, ROLE_MANAGER),
+                Collections.singletonList("/getProducts")
+        ));
+
+        constraintMappings.addAll(constraintOptionsMapping(
                 buildConstraint(ROLE_GUEST, ROLE_MANAGER),
                 Collections.singletonList("/getProducts")
         ));
@@ -52,9 +59,19 @@ public final class SecurityHandlerBuilder {
         return constraintMapping(constraint, paths, "GET");
     }
 
-    private static Collection<ConstraintMapping> constraintFullMapping(Constraint constraint,
+    private static Collection<ConstraintMapping> constraintHeadMapping(Constraint constraint,
+                                                                      Collection<String> paths) {
+        return constraintMapping(constraint, paths, "HEAD");
+    }
+
+    private static Collection<ConstraintMapping> constraintOptionsMapping(Constraint constraint,
+                                                                      Collection<String> paths) {
+        return constraintMapping(constraint, paths, "OPTIONS");
+    }
+
+    private static Collection<ConstraintMapping> constraintPostMapping(Constraint constraint,
                                                                        Collection<String> paths) {
-        return constraintMapping(constraint, paths, "*");
+        return constraintMapping(constraint, paths, "POST");
     }
 
     private static Collection<ConstraintMapping> constraintMapping(Constraint constraint,

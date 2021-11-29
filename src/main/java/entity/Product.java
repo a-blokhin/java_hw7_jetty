@@ -8,6 +8,17 @@ public class Product {
 
     public Product() {
     }
+    public Product(int id, String name, String company, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.company = company;
+        this.quantity = quantity;
+    }
+    public Product(String name, String company, int quantity) {
+        this.name = name;
+        this.company = company;
+        this.quantity = quantity;
+    }
 
     public String getName() {
         return name;
