@@ -18,6 +18,7 @@ allprojects {
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.6'
 
         implementation("org.jetbrains:annotations:20.1.0")
+        implementation("com.google.inject:guice:4.0")
         implementation "org.eclipse.jetty:jetty-server:9.4.33.v20201020"
         implementation "org.eclipse.jetty:jetty-servlet:9.4.33.v20201020"
         testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"

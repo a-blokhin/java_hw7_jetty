@@ -36,7 +36,7 @@ public final class PageGeneration {
         return result;
     }
 
-    public void PagePost(HttpServletRequest req, HttpServletResponse resp) throws SQLException {
+    public void PagePost(HttpServletRequest req) throws SQLException {
         String name = req.getParameter("name");
         String company = req.getParameter("company");
         String quantityString = req.getParameter("quantity");

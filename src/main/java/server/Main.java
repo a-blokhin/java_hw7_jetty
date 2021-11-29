@@ -10,8 +10,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.flywaydb.core.Flyway;
-import servlet.GetServlet;
-import servlet.PostServlet;
+import servlet.DBServlet;
 
 import java.net.URL;
 
@@ -33,8 +32,8 @@ public final class Main {
         context.setWelcomeFiles(new String[]{"/static/example"});
 
         context.addServlet(new ServletHolder("default", DefaultServlet.class),"/");
-        context.addServlet(new ServletHolder("postProduct", PostServlet.class),"/postProduct");
-        context.addServlet(new ServletHolder("getProducts", GetServlet.class),"/getProducts");
+        context.addServlet(new ServletHolder("postProduct", DBServlet.class),"/postProduct");
+        context.addServlet(new ServletHolder("getProducts", DBServlet.class),"/getProducts");
 
         final String hashConfig = Main.class.getResource("/hash_config").toExternalForm();
         final HashLoginService hashLoginService = new HashLoginService("login",hashConfig);
