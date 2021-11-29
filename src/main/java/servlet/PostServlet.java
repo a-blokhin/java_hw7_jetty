@@ -1,6 +1,7 @@
 package servlet;
 
 import DAO.ProductDAO;
+import PageGeneration.PageGeneration;
 import entity.Product;
 
 import javax.servlet.ServletException;
@@ -19,28 +20,13 @@ public final class PostServlet extends HttpServlet {
         resp.setCharacterEncoding("cp1251");
         resp.setContentType("text/html;charset=cp1251");
         try{
-            PagePost(req, resp);
+            PageGeneration pageGeneration = new PageGeneration();
+            pageGeneration.PagePost(req, resp);
             resp.setStatus(HttpServletResponse.SC_OK);
         }catch (NullPointerException nullException) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Not enough parameters");
         } catch (SQLException throwables) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQLException");
         }
-    }
-    public void PagePost(HttpServletRequest req, HttpServletResponse resp) throws SQLException {
-        String name = req.getParameter("name");
-        String company = req.getParameter("company");
-        String quantityString = req.getParameter("quantity");
-
-        if ((name == null)|(company == null)|(quantityString == null)){
-            throw new NullPointerException();
-        }
-        int quantity = Integer.parseInt(quantityString);
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/db",
-                "postgres", "123567");
-        ProductDAO productDAO = new ProductDAO(connection);
-        productDAO.save(new Product(name,
-                company,
-                quantity));
     }
 }
