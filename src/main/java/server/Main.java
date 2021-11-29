@@ -15,7 +15,7 @@ import servlet.PostServlet;
 
 import java.net.URL;
 
-public class Main {
+public final class Main {
     public static void main(String[] args) throws Exception{
         Flyway flyway = Flyway.configure()
                 .dataSource("jdbc:postgresql://localhost:5432/db","postgres","123567")
