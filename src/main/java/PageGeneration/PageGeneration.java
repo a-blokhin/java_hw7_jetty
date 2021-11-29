@@ -12,25 +12,22 @@ import java.util.List;
 
 public final class PageGeneration {
 
-    public String PageGet(){
+    public String PageGet() throws SQLException {
         String result = "<html><head>\n" +
                 "    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n" +
                 "</head>" +
                 "<body>\n"+
                 "<table><tr><th>ID</th><th>Product</th><th>Company</th><th>Quantity</th></tr>\n";
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/db",
-                    "postgres", "123567");
-            ProductDAO productDAO = new ProductDAO(connection);
-            List<Product> rs = productDAO.all();
-            for (Product product: rs) {
-                result+=("<tr><td>" + product.getId() +
-                        "</td><td>" + product.getName() +
-                        "</td><td>" + product.getCompany() +
-                        "</td><td>" + product.getQuantity() + "</td></tr>\n");
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/db",
+            "postgres", "123567");
+        ProductDAO productDAO = new ProductDAO(connection);
+        List<Product> rs = productDAO.all();
+        for (Product product: rs) {
+            result += ("<tr><td>" + product.getId() +
+                    "</td><td>" + product.getName() +
+                    "</td><td>" + product.getCompany() +
+                    "</td><td>" + product.getQuantity() + "</td></tr>\n");
         }
         result+="</body></html>";
         return result;

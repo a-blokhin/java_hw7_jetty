@@ -17,20 +17,24 @@ public final class DBServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws   IOException {
         response.setCharacterEncoding("cp1251");
         response.setContentType("text/html;charset=cp1251");
-        response.getWriter().println(injector.getInstance(PageGeneration.class).PageGet());
+        try {
+            response.getWriter().println(injector.getInstance(PageGeneration.class).PageGet());
+        } catch (SQLException throwables) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQLException");
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setCharacterEncoding("cp1251");
-        resp.setContentType("text/html;charset=cp1251");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setCharacterEncoding("cp1251");
+        response.setContentType("text/html;charset=cp1251");
         try{
-            injector.getInstance(PageGeneration.class).PagePost(req);
-            resp.setStatus(HttpServletResponse.SC_OK);
+            injector.getInstance(PageGeneration.class).PagePost(request);
+            response.setStatus(HttpServletResponse.SC_OK);
         }catch (NullPointerException nullException) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Not enough parameters");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Not enough parameters");
         } catch (SQLException throwables) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQLException");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQLException");
         }
     }
 }
