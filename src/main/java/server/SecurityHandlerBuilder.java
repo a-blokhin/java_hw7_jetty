@@ -8,6 +8,7 @@ import org.eclipse.jetty.util.security.Constraint;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("NotNullNullableValidation")
 public final class SecurityHandlerBuilder {
@@ -20,25 +21,20 @@ public final class SecurityHandlerBuilder {
         security.setLoginService(loginService);
 
         final List<ConstraintMapping> constraintMappings = new ArrayList<>();
-        constraintMappings.addAll(constraintPostMapping(
-                buildConstraint(ROLE_MANAGER),
-                Collections.singletonList("/postProduct")
-        ));
 
-        constraintMappings.addAll(constraintGetMapping(
-                buildConstraint(ROLE_GUEST, ROLE_MANAGER),
-                Collections.singletonList("/getProducts")
-        ));
+        Stream.of("GET", "HEAD", "OPTIONS").forEach(method -> {
+            constraintMappings.addAll(constraintMapping(
+                    buildConstraint(ROLE_GUEST, ROLE_MANAGER),
+                    Collections.singletonList("/getProducts"),
+                    method));
+        } );
 
-        constraintMappings.addAll(constraintHeadMapping(
-                buildConstraint(ROLE_GUEST, ROLE_MANAGER),
-                Collections.singletonList("/getProducts")
-        ));
-
-        constraintMappings.addAll(constraintOptionsMapping(
-                buildConstraint(ROLE_GUEST, ROLE_MANAGER),
-                Collections.singletonList("/getProducts")
-        ));
+        Stream.of("POST").forEach(method -> {
+            constraintMappings.addAll(constraintMapping(
+                    buildConstraint(ROLE_GUEST, ROLE_MANAGER),
+                    Collections.singletonList("/postProduct"),
+                    method));
+        } );
 
         security.setConstraintMappings(constraintMappings);
         security.setAuthenticator(new BasicAuthenticator());
@@ -52,26 +48,6 @@ public final class SecurityHandlerBuilder {
         starterConstraint.setRoles(userRoles);
         starterConstraint.setAuthenticate(true);
         return starterConstraint;
-    }
-
-    private static Collection<ConstraintMapping> constraintGetMapping(Constraint constraint,
-                                                                      Collection<String> paths) {
-        return constraintMapping(constraint, paths, "GET");
-    }
-
-    private static Collection<ConstraintMapping> constraintHeadMapping(Constraint constraint,
-                                                                      Collection<String> paths) {
-        return constraintMapping(constraint, paths, "HEAD");
-    }
-
-    private static Collection<ConstraintMapping> constraintOptionsMapping(Constraint constraint,
-                                                                      Collection<String> paths) {
-        return constraintMapping(constraint, paths, "OPTIONS");
-    }
-
-    private static Collection<ConstraintMapping> constraintPostMapping(Constraint constraint,
-                                                                       Collection<String> paths) {
-        return constraintMapping(constraint, paths, "POST");
     }
 
     private static Collection<ConstraintMapping> constraintMapping(Constraint constraint,

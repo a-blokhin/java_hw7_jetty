@@ -1,5 +1,6 @@
 package server;
 
+import commons.Connect;
 import commons.DefaultServer;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -9,18 +10,13 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
-import org.flywaydb.core.Flyway;
 import servlet.DBServlet;
 
 import java.net.URL;
 
 public final class Main {
     public static void main(String[] args) throws Exception{
-        Flyway flyway = Flyway.configure()
-                .dataSource("jdbc:postgresql://localhost:5432/db","postgres","123567")
-                .locations("db")
-                .load();
-        flyway.migrate();
+        Connect.migrate();
 
         Server server = new DefaultServer().build();
 
